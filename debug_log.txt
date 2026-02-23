@@ -1,0 +1,15 @@
+--- Starting Debug Workflow ---
+Created debug_dataset.csv
+
+[Step 1] Loading Data...
+Data loaded: 20 rows, 4 columns.
+[OK] Load Data Success
+Num Cols: ['id', 'value', 'missing_col']
+All Cols: ['id', 'value', 'category', 'missing_col']
+
+[Step 2] Generating Auto Charts...
+[OK] Auto Charts Success. Generated 6 charts.
+
+[Step 3] Running ML...
+ML SUCCESS: R2=-0.6646, Samples=20, Features=2
+[OK] ML Success

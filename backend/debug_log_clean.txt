@@ -1,0 +1,209 @@
+Latest file: uploads\ipl_data.csv
+Loading uploads\ipl_data.csv...
+Initial Types:
+Year                   str
+Player_Name            str
+Matches_Batted         str
+Not_Outs               str
+Runs_Scored            str
+Highest_Score          str
+Batting_Average        str
+Balls_Faced            str
+Batting_Strike_Rate    str
+Centuries              str
+Half_Centuries         str
+Fours                  str
+Sixes                  str
+Catches_Taken          str
+Stumpings              str
+Matches_Bowled         str
+Balls_Bowled           str
+Runs_Conceded          str
+Wickets_Taken          str
+Best_Bowling_Match     str
+Bowling_Average        str
+Economy_Rate           str
+Bowling_Strike_Rate    str
+Four_Wicket_Hauls      str
+Five_Wicket_Hauls      str
+dtype: object
+
+Cleaning Data...
+Col: Year, Dtype: str
+Attempting to convert column: Year
+  Sample raw values: ['2024', '2023', '2022', '2021', '2020']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Year to numeric.
+Col: Player_Name, Dtype: str
+Attempting to convert column: Player_Name
+  Sample raw values: ['Ruturaj Gaikwad', 'Ruturaj Gaikwad', 'Ruturaj Gaikwad', 'Ruturaj Gaikwad', 'Ruturaj Gaikwad']
+  - Converted 0/1172 values.
+  - Sample failures: ['Ruturaj Gaikwad', 'Ruturaj Gaikwad', 'Ruturaj Gaikwad', 'Ruturaj Gaikwad', 'Ruturaj Gaikwad']
+  - FAILED: Player_Name remains object.
+Col: Matches_Batted, Dtype: str
+Attempting to convert column: Matches_Batted
+  Sample raw values: ['2', '16', '14', '16', '6']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Matches_Batted to numeric.
+Col: Not_Outs, Dtype: str
+Attempting to convert column: Not_Outs
+  Sample raw values: ['0', '1', '0', '2', '2']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Not_Outs to numeric.
+Col: Runs_Scored, Dtype: str
+Attempting to convert column: Runs_Scored
+  Sample raw values: ['61', '590', '368', '635', '204']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Runs_Scored to numeric.
+Col: Highest_Score, Dtype: str
+Attempting to convert column: Highest_Score
+  Sample raw values: ['46', '92', '99', '101*', '72']
+  - Converted 701/1172 values.
+  - Sample failures: ['101*', '92*', '32*', '50*', '18*']
+  - SUCCESS: Converted Highest_Score to numeric.
+Col: Batting_Average, Dtype: str
+Attempting to convert column: Batting_Average
+  Sample raw values: ['30.5', '42.14', '26.29', '45.35', '51']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Batting_Average to numeric.
+Col: Balls_Faced, Dtype: str
+Attempting to convert column: Balls_Faced
+  Sample raw values: ['51', '400', '291', '466', '169']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Balls_Faced to numeric.
+Col: Batting_Strike_Rate, Dtype: str
+Attempting to convert column: Batting_Strike_Rate
+  Sample raw values: ['119.61', '147.5', '126.46', '136.26', '120.71']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Batting_Strike_Rate to numeric.
+Col: Centuries, Dtype: str
+Attempting to convert column: Centuries
+  Sample raw values: ['0', '0', '0', '1', '0']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Centuries to numeric.
+Col: Half_Centuries, Dtype: str
+Attempting to convert column: Half_Centuries
+  Sample raw values: ['0', '4', '3', '4', '3']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Half_Centuries to numeric.
+Col: Fours, Dtype: str
+Attempting to convert column: Fours
+  Sample raw values: ['8', '46', '33', '64', '16']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Fours to numeric.
+Col: Sixes, Dtype: str
+Attempting to convert column: Sixes
+  Sample raw values: ['1', '30', '14', '23', '6']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Sixes to numeric.
+Col: Catches_Taken, Dtype: str
+Attempting to convert column: Catches_Taken
+  Sample raw values: ['0', '17', '4', '6', '4']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Catches_Taken to numeric.
+Col: Stumpings, Dtype: str
+Attempting to convert column: Stumpings
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 1131/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Stumpings to numeric.
+Col: Matches_Bowled, Dtype: str
+Attempting to convert column: Matches_Bowled
+  Sample raw values: ['2', '16', '14', '16', '6']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Matches_Bowled to numeric.
+Col: Balls_Bowled, Dtype: str
+Attempting to convert column: Balls_Bowled
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Balls_Bowled to numeric.
+Col: Runs_Conceded, Dtype: str
+Attempting to convert column: Runs_Conceded
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Runs_Conceded to numeric.
+Col: Wickets_Taken, Dtype: str
+Attempting to convert column: Wickets_Taken
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Wickets_Taken to numeric.
+Col: Best_Bowling_Match, Dtype: str
+Attempting to convert column: Best_Bowling_Match
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 419/1172 values.
+  - Sample failures: ['1/5', 'No stats', 'No stats', '0/21', '3/20']
+  - SUCCESS: Converted Best_Bowling_Match to numeric.
+Col: Bowling_Average, Dtype: str
+Attempting to convert column: Bowling_Average
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Bowling_Average to numeric.
+Col: Economy_Rate, Dtype: str
+Attempting to convert column: Economy_Rate
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Economy_Rate to numeric.
+Col: Bowling_Strike_Rate, Dtype: str
+Attempting to convert column: Bowling_Strike_Rate
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Bowling_Strike_Rate to numeric.
+Col: Four_Wicket_Hauls, Dtype: str
+Attempting to convert column: Four_Wicket_Hauls
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Four_Wicket_Hauls to numeric.
+Col: Five_Wicket_Hauls, Dtype: str
+Attempting to convert column: Five_Wicket_Hauls
+  Sample raw values: ['0', '0', '0', '0', '0']
+  - Converted 1130/1172 values.
+  - Sample failures: ['No stats', 'No stats', 'No stats', 'No stats', 'No stats']
+  - SUCCESS: Converted Five_Wicket_Hauls to numeric.
+
+Final Types:
+Year                   float64
+Player_Name                str
+Matches_Batted         float64
+Not_Outs               float64
+Runs_Scored            float64
+Highest_Score          float64
+Batting_Average        float64
+Balls_Faced            float64
+Batting_Strike_Rate    float64
+Centuries              float64
+Half_Centuries         float64
+Fours                  float64
+Sixes                  float64
+Catches_Taken          float64
+Stumpings              float64
+Matches_Bowled         float64
+Balls_Bowled           float64
+Runs_Conceded          float64
+Wickets_Taken          float64
+Best_Bowling_Match     float64
+Bowling_Average        float64
+Economy_Rate           float64
+Bowling_Strike_Rate    float64
+Four_Wicket_Hauls      float64
+Five_Wicket_Hauls      float64
+dtype: object

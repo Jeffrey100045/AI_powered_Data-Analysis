@@ -1,0 +1,61 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+credentials.json
+token.pickle
+token.json
+tokens/
+*.env
+.env
+.env.local
+.env.*.local
+
+# Dependency folders
+node_modules/
+jspm_packages/
+.venv/
+venv/
+env/
+.env/
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Build/Dist
+frontend/dist/
+backend/build/
+backend/dist/
+*.spec
+
+# Data/Uploads
+uploads/
+**/uploads/
+*.csv
+*.xlsx
+*.xls
+*.pdf
+*.docx
+*.doc
+
+# Misc
+.antigravity/
+.gemini/
+.vscode/
+.idea/
+*.log
