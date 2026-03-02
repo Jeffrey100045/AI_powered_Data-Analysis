@@ -11,10 +11,56 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
+  <style>
+    #crash-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a0f1e;
+      color: #f87171;
+      padding: 40px;
+      z-index: 99999;
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+  <script>
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.error("DEBUG: Crash detected in index.html block", message);
+      const crashScreen = document.getElementById('crash-screen');
+      if (crashScreen) {
+        crashScreen.style.display = 'block';
+        document.getElementById('crash-msg').innerText = message;
+        if (message.includes('auth/invalid-api-key') || message.includes('apiKey')) {
+          document.getElementById('crash-hint').style.display = 'block';
+        }
+      }
+    };
+  </script>
 </head>
 
 <body>
   <div id="root"></div>
+
+  <!-- Diagnostic Crash Screen (Hidden by default) -->
+  <div id="crash-screen">
+    <h1 style="font-size: 24px;">🚀 Application Setup Required</h1>
+    <p id="crash-msg" style="color: #9ca3af; margin: 20px 0;">Loading...</p>
+
+    <div id="crash-hint"
+      style="display: none; border: 1px solid #374151; padding: 20px; border-radius: 8px; background: #1f2937;">
+      <h3 style="color: white; margin-top:0;">Likely Cause: Missing Firebase Keys</h3>
+      <p style="font-size: 14px;">Vite needs your Firebase keys <b>at build time</b>. </p>
+      <ol style="font-size: 14px; line-height: 1.6;">
+        <li>Go to Render Dashboard > kavi-frontend > Environment.</li>
+        <li>Ensure all VITE_FIREBASE_... variables are present.</li>
+        <li>Click "Manual Deploy" > <b>"Clear Build Cache and Deploy"</b>.</li>
+      </ol>
+    </div>
+  </div>
+
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
