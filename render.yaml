@@ -5,7 +5,7 @@ services:
     runtime: docker
     plan: free
     rootDirectory: backend
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile  # Corrected case (lowercase 'f')
     envVars:
       - key: GEMINI_API_KEY
         sync: false
@@ -16,4 +16,4 @@ services:
     runtime: docker
     plan: free
     rootDirectory: frontend
-    dockerFilePath: Dockerfile
+    dockerfilePath: Dockerfile  # Corrected case (lowercase 'f')
