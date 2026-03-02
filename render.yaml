@@ -4,8 +4,8 @@ services:
     name: kavi-backend
     runtime: docker
     plan: free
-    rootDirectory: backend
-    dockerfilePath: Dockerfile  # Corrected case (lowercase 'f')
+    dockerfilePath: backend/Dockerfile   # ← path relative to repo root
+    dockerContext: backend               # ← build context relative to repo root
     envVars:
       - key: GEMINI_API_KEY
         sync: false
@@ -15,5 +15,5 @@ services:
     name: kavi-frontend
     runtime: docker
     plan: free
-    rootDirectory: frontend
-    dockerfilePath: Dockerfile  # Corrected case (lowercase 'f')
+    dockerfilePath: frontend/Dockerfile  # ← path relative to repo root
+    dockerContext: frontend              # ← build context relative to repo root
