@@ -13,6 +13,8 @@ const firebaseConfig = {
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
+console.log("Firebase Init Attempt with keys starting with:", firebaseConfig.apiKey ? firebaseConfig.apiKey.substring(0, 5) : "MISSING");
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
