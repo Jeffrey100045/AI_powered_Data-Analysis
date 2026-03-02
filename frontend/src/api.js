@@ -1,28 +1,40 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://kavi-api-2026.loca.lt';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://ai-daaas-api.loca.lt';
 
-export const uploadFile = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    const response = await fetch(`${BASE_URL}/upload`, {
-        method: 'POST',
-        body: formData,
+// Localtunnel requires this header to bypass its landing page for API requests
+const headers = {
+    'Bypass-Tunnel-Reminder': 'true',
+};
+
+const request = async (url, options = {}) => {
+    const response = await fetch(url, {
+        ...options,
+        headers: {
+            ...headers,
+            ...options.headers,
+        },
     });
     return response.json();
 };
 
+export const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return request(`${BASE_URL}/upload`, {
+        method: 'POST',
+        body: formData,
+    });
+};
+
 export const filterData = async (query) => {
-    const response = await fetch(`${BASE_URL}/filter?query=${encodeURIComponent(query)}`);
-    return response.json();
+    return request(`${BASE_URL}/filter?query=${encodeURIComponent(query)}`);
 };
 
 export const runML = async (target) => {
-    const response = await fetch(`${BASE_URL}/ml?target=${encodeURIComponent(target)}`);
-    return response.json();
+    return request(`${BASE_URL}/ml?target=${encodeURIComponent(target)}`);
 };
 
 export const getAutoCharts = async () => {
-    const response = await fetch(`${BASE_URL}/auto_charts`);
-    return response.json();
+    return request(`${BASE_URL}/auto_charts`);
 };
 
 export const exportReport = () => {
@@ -34,37 +46,31 @@ export const exportCsv = () => {
 };
 
 export const getDriveStatus = async () => {
-    const response = await fetch(`${BASE_URL}/drive/status`);
-    return response.json();
+    return request(`${BASE_URL}/drive/status`);
 };
 
 export const authDrive = async () => {
-    const response = await fetch(`${BASE_URL}/drive/auth`, { method: 'POST' });
-    return response.json();
+    return request(`${BASE_URL}/drive/auth`, { method: 'POST' });
 };
 
 export const getDriveFiles = async () => {
-    const response = await fetch(`${BASE_URL}/drive/files`);
-    return response.json();
+    return request(`${BASE_URL}/drive/files`);
 };
 
 export const downloadFromDrive = async (fileId) => {
-    const response = await fetch(`${BASE_URL}/drive/download/${fileId}`);
-    return response.json();
+    return request(`${BASE_URL}/drive/download/${fileId}`);
 };
 
 export const uploadToDrive = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-    const response = await fetch(`${BASE_URL}/drive/upload`, {
+    return request(`${BASE_URL}/drive/upload`, {
         method: 'POST',
         body: formData,
     });
-    return response.json();
 };
 
 export const getSessionState = async () => {
-    const response = await fetch(`${BASE_URL}/session_state`);
-    return response.json();
+    return request(`${BASE_URL}/session_state`);
 };
 

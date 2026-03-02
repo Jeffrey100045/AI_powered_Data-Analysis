@@ -4,6 +4,9 @@ import {
     getDriveStatus, authDrive, getDriveFiles, downloadFromDrive, uploadToDrive
 } from './api.js'
 import Dashboard from './components/Dashboard.jsx'
+import Login from './components/Login.jsx'
+import { auth } from './firebase'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
 
 export default function App() {
     const [data, setData] = useState(null)
@@ -17,6 +20,8 @@ export default function App() {
     const [filterResult, setFilterResult] = useState(null)
     const [toast, setToast] = useState(null)
     const [fileName, setFileName] = useState('')
+    const [user, setUser] = useState(null)
+    const [authLoading, setAuthLoading] = useState(true)
 
     // Cloud state
     const [isDriveAuth, setIsDriveAuth] = useState(false)
@@ -24,7 +29,12 @@ export default function App() {
     const [cloudLoading, setCloudLoading] = useState(false)
 
     useEffect(() => {
-        checkDriveStatus()
+        const unsubscribe = onAuthStateChanged(auth, (u) => {
+            setUser(u)
+            setAuthLoading(false)
+            if (u) checkDriveStatus()
+        })
+        return () => unsubscribe()
     }, [])
 
     const checkDriveStatus = async () => {
@@ -132,6 +142,19 @@ export default function App() {
         } catch (e) { showToast('Filter failed', 'error') }
     }
 
+    if (authLoading) {
+        return (
+            <div className="loading-overlay" style={{ height: '100vh' }}>
+                <div className="spinner" />
+                <p>Establishing secure connection...</p>
+            </div>
+        )
+    }
+
+    if (!user) {
+        return <Login />
+    }
+
     return (
         <div className="app-container">
             <div className="hub-card">
@@ -143,7 +166,7 @@ export default function App() {
                             Analytics Hub &nbsp;·&nbsp; {isDriveAuth ? 'Cloud Connected' : 'Local Mode'}
                         </div>
                     </div>
-                    <button className="btn btn-secondary" onClick={() => window.location.reload()}>Logout</button>
+                    <button className="btn btn-secondary" onClick={() => signOut(auth)}>Logout</button>
                 </div>
 
                 {/* Tabs Navigation */}

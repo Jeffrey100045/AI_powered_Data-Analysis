@@ -17,9 +17,11 @@ FROM nginx:stable-alpine
 # Copy built files from the build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy custom nginx config if you have one, or use default
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Render uses the PORT environment variable, so we need to adjust nginx to listen on it
+# Usually Render manages the port mapping, but it's safer to be flexible
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

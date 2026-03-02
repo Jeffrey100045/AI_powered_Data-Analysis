@@ -11,8 +11,8 @@ from dotenv import load_dotenv
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-from .google_drive_service import GoogleDriveService
-from . import reporting
+from google_drive_service import GoogleDriveService
+import reporting
 from fastapi.responses import FileResponse
 
 
