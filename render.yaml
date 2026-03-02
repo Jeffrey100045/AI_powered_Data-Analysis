@@ -4,19 +4,16 @@ services:
     name: kavi-backend
     runtime: docker
     plan: free
-    dockerFilePath: backend/Dockerfile
+    rootDirectory: backend
+    dockerFilePath: Dockerfile
     envVars:
       - key: GEMINI_API_KEY
-        sync: false # User will set this manually in the dashboard
+        sync: false
 
   # 2. The Frontend (React/Vite with Nginx)
   - type: web
     name: kavi-frontend
     runtime: docker
     plan: free
-    dockerFilePath: frontend/Dockerfile
-    # We don't necessarily need the backend URL here if the proxy in nginx.conf 
-    # uses 'kavi-backend:8000', but Render's free tier services 
-    # can communicate over the public URL or internal hostnames.
-    # For simplicity, we'll let the user update the frontend's environment variable 
-    # if they need to point to a specific URL.
+    rootDirectory: frontend
+    dockerFilePath: Dockerfile
