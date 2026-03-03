@@ -53,9 +53,16 @@
       style="display: none; border: 1px solid #374151; padding: 20px; border-radius: 8px; background: #1f2937;">
       <h3 style="color: white; margin-top:0;">Likely Cause: Missing Firebase Keys</h3>
       <p style="font-size: 14px;">Vite needs your Firebase keys <b>at build time</b>. </p>
+
+      <div
+        style="background: #111827; padding: 10px; border-radius: 4px; margin: 10px 0; font-size: 12px; color: #fbbf24;">
+        <strong>Diagnosis (Captured at build):</strong><br />
+        Check your browser console (F12) to see the "Firebase Diagnostic Check" log.
+      </div>
+
       <ol style="font-size: 14px; line-height: 1.6;">
-        <li>Go to Render Dashboard > kavi-frontend > Environment.</li>
-        <li>Ensure all VITE_FIREBASE_... variables are present.</li>
+        <li>Go to <b>Render Dashboard</b> > <b>kavi-frontend</b> > <b>Environment</b>.</li>
+        <li>Add <b>all 7</b> VITE_FIREBASE_... variables.</li>
         <li>Click "Manual Deploy" > <b>"Clear Build Cache and Deploy"</b>.</li>
       </ol>
     </div>

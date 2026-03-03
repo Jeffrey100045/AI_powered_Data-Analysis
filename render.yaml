@@ -15,8 +15,7 @@ services:
     name: kavi-frontend
     runtime: docker
     plan: free
-    dockerfilePath: frontend/Dockerfile  # ← path relative to repo root
-    dockerContext: frontend              # ← build context relative to repo root
+    dockerfilePath: frontend/Dockerfile
     envVars:
       - key: VITE_FIREBASE_API_KEY
         sync: false
