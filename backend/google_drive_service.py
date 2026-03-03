@@ -27,52 +27,68 @@ class GoogleDriveService:
     def authenticate(self):
         """Authenticate with Google Drive using OAuth2."""
         import base64
+        print("DEBUG: authenticate() called")
         
         # 1. Try to load from GOOGLE_TOKEN_PICKLE_BASE64 (Best for Render)
-        env_token = os.environ.get('GOOGLE_TOKEN_PICKLE_BASE64')
-        if env_token:
+        env_token_b64 = os.environ.get('GOOGLE_TOKEN_PICKLE_BASE64')
+        if env_token_b64:
+            print(f"DEBUG: GOOGLE_TOKEN_PICKLE_BASE64 found (length: {len(env_token_b64)})")
             try:
-                token_data = base64.b64decode(env_token)
+                # Clean the string from potential spaces or newlines
+                env_token_b64 = env_token_b64.strip().replace('\n', '').replace('\r', '')
+                token_data = base64.b64decode(env_token_b64)
                 self.creds = pickle.loads(token_data)
-                print("Authenticated using GOOGLE_TOKEN_PICKLE_BASE64")
+                print(f"DEBUG: Successfully loaded credentials from env var. Valid: {self.creds.valid}")
             except Exception as e:
-                print(f"Failed to load token from environment variable: {e}")
+                print(f"DEBUG: Failed to decode/load token from env var: {e}")
 
         # 2. Check local token.pickle if env token failed
         if (not self.creds or not self.creds.valid) and os.path.exists(self.token_path):
-            with open(self.token_path, 'rb') as token:
-                self.creds = pickle.load(token)
+            print(f"DEBUG: Checking local token.pickle at {self.token_path}")
+            try:
+                with open(self.token_path, 'rb') as token:
+                    self.creds = pickle.load(token)
+                print(f"DEBUG: Loaded local token.pickle. Valid: {self.creds.valid}")
+            except Exception as e:
+                print(f"DEBUG: Failed to load local token.pickle: {e}")
         
         # 3. If there are no (valid) credentials, try to refresh or init
         if not self.creds or not self.creds.valid:
             if self.creds and self.creds.expired and self.creds.refresh_token:
+                print("DEBUG: Attempting to refresh expired credentials...")
                 try:
                     self.creds.refresh(Request())
+                    print("DEBUG: Token refreshed successfully")
                 except Exception as e:
-                    print(f"Token refresh failed: {e}")
+                    print(f"DEBUG: Token refresh failed: {e}")
+                    # If refresh fails, we might still be able to use GOOGLE_CREDENTIALS_JSON to re-auth
                     self.creds = None
             
             if not self.creds:
+                print("DEBUG: No valid credentials found. Checking GOOGLE_CREDENTIALS_JSON")
                 # Check for environment variable credentials
                 env_creds = os.environ.get('GOOGLE_CREDENTIALS_JSON')
                 if env_creds:
+                    print(f"DEBUG: GOOGLE_CREDENTIALS_JSON found (length: {len(env_creds)})")
                     try:
                         creds_dict = json.loads(env_creds)
                         flow = InstalledAppFlow.from_client_config(creds_dict, SCOPES)
-                        # Use run_local_server only if display is available, else we might need another approach
-                        # On Render, this will still fail unless the user has already provided a token.
+                        # run_local_server setup for headless console login if possible
                         self.creds = flow.run_local_server(port=0, open_browser=False)
+                        print("DEBUG: Authenticated using GOOGLE_CREDENTIALS_JSON")
                     except Exception as e:
-                        print(f"Failed to load credentials from env: {e}")
+                        print(f"DEBUG: Failed to authenticate with GOOGLE_CREDENTIALS_JSON: {e}")
                 
                 # Fallback to credentials.json file
                 if not self.creds:
                     if not os.path.exists(self.credentials_path):
+                        print(f"DEBUG: Credentials file not found at {self.credentials_path}")
                         raise FileNotFoundError(
                             f"Credentials file not found at {self.credentials_path}. "
                             "Please download OAuth2 credentials from Google Cloud Console or set GOOGLE_TOKEN_PICKLE_BASE64 environment variable."
                         )
                     
+                    print(f"DEBUG: Found credentials.json at {self.credentials_path}")
                     flow = InstalledAppFlow.from_client_secrets_file(
                         self.credentials_path, SCOPES)
                     self.creds = flow.run_local_server(port=0)
@@ -82,13 +98,16 @@ class GoogleDriveService:
                 if self.creds:
                     with open(self.token_path, 'wb') as token:
                         pickle.dump(self.creds, token)
-            except:
-                pass
+                    print(f"DEBUG: Saved session token to {self.token_path}")
+            except Exception as e:
+                print(f"DEBUG: Error saving session token: {e}")
         
         if not self.creds:
+            print("DEBUG: Authentication failed completely - self.creds is None")
             raise Exception("Authentication failed. No credentials provided.")
             
         self.service = build('drive', 'v3', credentials=self.creds)
+        print("DEBUG: Google Drive service built successfully")
         return True
     
     def is_authenticated(self):
