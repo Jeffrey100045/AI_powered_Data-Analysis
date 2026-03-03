@@ -9,6 +9,10 @@ services:
     envVars:
       - key: GEMINI_API_KEY
         sync: false
+      - key: GOOGLE_CREDENTIALS_JSON
+        sync: false
+      - key: GOOGLE_TOKEN_PICKLE_BASE64
+        sync: false
 
   # 2. The Frontend (React/Vite with Nginx)
   - type: web
