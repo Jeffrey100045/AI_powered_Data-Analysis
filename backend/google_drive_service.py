@@ -32,10 +32,19 @@ class GoogleDriveService:
         # 1. Try to load from GOOGLE_TOKEN_PICKLE_BASE64 (Best for Render)
         env_token_b64 = os.environ.get('GOOGLE_TOKEN_PICKLE_BASE64')
         if env_token_b64:
-            print(f"DEBUG: GOOGLE_TOKEN_PICKLE_BASE64 found (length: {len(env_token_b64)})")
+            # Clean and validate
+            env_token_b64 = env_token_b64.strip().replace('\n', '').replace('\r', '').replace(' ', '')
+            print(f"DEBUG: GOOGLE_TOKEN_PICKLE_BASE64 found. Length: {len(env_token_b64)}")
+            if len(env_token_b64) > 20:
+                print(f"DEBUG: Token start: {env_token_b64[:10]}... End: ...{env_token_b64[-10:]}")
+            
             try:
-                # Clean the string from potential spaces or newlines
-                env_token_b64 = env_token_b64.strip().replace('\n', '').replace('\r', '')
+                # Add padding if necessary
+                missing_padding = len(env_token_b64) % 4
+                if missing_padding:
+                    env_token_b64 += '=' * (4 - missing_padding)
+                    print(f"DEBUG: Added {4 - missing_padding} padding characters")
+                
                 token_data = base64.b64decode(env_token_b64)
                 self.creds = pickle.loads(token_data)
                 print(f"DEBUG: Successfully loaded credentials from env var. Valid: {self.creds.valid}")
