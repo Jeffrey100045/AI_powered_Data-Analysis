@@ -13,12 +13,16 @@ const firebaseConfig = {
     measurementId: (import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "").trim()
 };
 
-console.log("Firebase Init Attempt. Key length:", firebaseConfig.apiKey.length);
-if (!firebaseConfig.apiKey) {
-    console.error("CRITICAL: VITE_FIREBASE_API_KEY is missing from the build!");
-}
+console.log("Firebase Diagnostic Check:", {
+    hasApiKey: !!firebaseConfig.apiKey,
+    hasAuthDomain: !!firebaseConfig.authDomain,
+    hasProjectId: !!firebaseConfig.projectId,
+    apiKeyLength: firebaseConfig.apiKey.length
+});
 
-console.log("Firebase Init Attempt with keys starting with:", firebaseConfig.apiKey ? firebaseConfig.apiKey.substring(0, 5) : "MISSING");
+if (!firebaseConfig.apiKey) {
+    throw new Error("CRITICAL: VITE_FIREBASE_API_KEY is missing from the build. Check Render Environment Variables.");
+}
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

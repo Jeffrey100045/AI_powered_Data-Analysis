@@ -16,6 +16,7 @@ services:
     runtime: docker
     plan: free
     dockerfilePath: frontend/Dockerfile
+    dockerContext: frontend
     envVars:
       - key: VITE_FIREBASE_API_KEY
         sync: false
