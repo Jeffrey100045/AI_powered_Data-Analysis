@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import {
-    uploadFile, runML, filterData, exportReport, exportCsv,
-    getDriveStatus, authDrive, getDriveFiles, downloadFromDrive, uploadToDrive
+    uploadFile, filterData, runML, getAutoCharts, exportReport, exportCsv,
+    authDrive, getDriveStatus, getDriveFiles, downloadFromDrive, uploadToDrive,
+    getSessionState, BASE_URL
 } from './api.js'
 import Dashboard from './components/Dashboard.jsx'
 import Login from './components/Login.jsx'
@@ -79,7 +80,8 @@ export default function App() {
             const res = await uploadFile(file)
             handleFileLoad(res, file.name)
         } catch (e) {
-            setError("Could not connect to backend")
+            console.error("DEBUG: uploadFile error:", e);
+            setError(`[${BASE_URL}] ${e.message || "Could not connect to backend"}`)
         }
         setLoading(false)
     }

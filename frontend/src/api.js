@@ -1,5 +1,5 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://ai-daaas-api.loca.lt';
-console.log("DEBUG: BASE_URL is", BASE_URL);
+export const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+console.log("DEBUG: frontend initialized with BASE_URL:", BASE_URL);
 
 // Localtunnel requires this header to bypass its landing page for API requests
 const headers = {
@@ -7,14 +7,28 @@ const headers = {
 };
 
 const request = async (url, options = {}) => {
-    const response = await fetch(url, {
-        ...options,
-        headers: {
-            ...headers,
-            ...options.headers,
-        },
-    });
-    return response.json();
+    try {
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                ...headers,
+                ...options.headers,
+            },
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            const msg = `Server error (${response.status}) at ${url}: ${errorText.substring(0, 50)}`;
+            console.error(`DEBUG: ${msg}`);
+            throw new Error(msg);
+        }
+        
+        return await response.json();
+    } catch (error) {
+        const msg = `Connection failed at ${url}: ${error.message}`;
+        console.error(`DEBUG: ${msg}`, error);
+        throw new Error(msg);
+    }
 };
 
 export const uploadFile = async (file) => {
