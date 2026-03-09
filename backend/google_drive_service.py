@@ -9,7 +9,10 @@ from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 import io
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/drive.file']
+SCOPES = [
+    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive.readonly'
+]
 
 class GoogleDriveService:
     def __init__(self, credentials_path=None, token_path=None):

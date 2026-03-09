@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File
+import threading
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import shutil
@@ -471,19 +472,22 @@ async def export_csv():
 @app.get("/export_report")
 async def export_report():
     if analyst.df is None:
-        return {"message": "Error", "detail": "No data loaded"}
+        return JSONResponse(status_code=400, content={"message": "Error", "detail": "No data loaded. Please re-upload your file first."})
     
     try:
-        print("DEBUG: Export report triggered")
+        print(f"DEBUG: Export report triggered. analyst.df shape: {analyst.df.shape if analyst.df is not None else 'None'}")
         path = "uploads/report.pdf"
         os.makedirs("uploads", exist_ok=True)
         stats = analyst.get_stats()
+        print(f"DEBUG: Stats extracted. Type: {type(stats)}")
+        
         ml_results = analyst.ml_results
         ml_text = ml_results.get("description", "No ML analysis performed.") if ml_results else "No ML analysis performed."
+        print(f"DEBUG: ML results found: {ml_results is not None}")
 
         charts = analyst.get_auto_charts()
+        print(f"DEBUG: Generating PDF with {len(charts)} charts at {path}")
         
-        print(f"DEBUG: Generating PDF with {len(charts)} charts")
         reporting.create_pdf_report(path, stats, ml_text, charts, ml_results)
         print("DEBUG: PDF generated successfully")
         return FileResponse(path, filename="Analysis_Report.pdf", media_type="application/pdf")
@@ -491,11 +495,10 @@ async def export_report():
         import traceback
         error_msg = traceback.format_exc()
         print(f"DEBUG: Export error: {error_msg}")
-        return {"message": "Error", "detail": str(e), "traceback": error_msg}
+        return JSONResponse(status_code=500, content={"message": "Error", "detail": str(e), "traceback": error_msg})
 
 
 @app.get("/session_state")
-
 async def get_state():
     return {
         "active": analyst.df is not None,
@@ -514,8 +517,17 @@ async def drive_status():
 @app.post("/drive/auth")
 async def drive_auth():
     try:
-        drive_service.authenticate()
-        return {"success": True}
+        # Run OAuth flow in background thread so it doesn't block the server
+        def run_auth():
+            try:
+                drive_service.authenticate()
+                print("DEBUG: Drive auth completed successfully in background")
+            except Exception as e:
+                print(f"DEBUG: Drive auth failed in background: {e}")
+        
+        auth_thread = threading.Thread(target=run_auth, daemon=True)
+        auth_thread.start()
+        return {"success": True, "message": "Authentication started. A browser window should open - please complete the sign-in there."}
     except Exception as e:
         return {"success": False, "error": str(e)}
 

@@ -32,7 +32,7 @@ This is the fastest way to get everything running in a controlled environment.
 ---
 
 ## Option 2: Deploy to GitHub (Version Control)
-
+   
 **IMPORTANT**: I detected that `git` is currently NOT installed on your computer. You must install it first to run these commands.
 
 1. **Install Git**: Download and install from [git-scm.com](https://git-scm.com/download/win).

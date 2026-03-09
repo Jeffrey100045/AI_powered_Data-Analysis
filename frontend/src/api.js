@@ -1,4 +1,5 @@
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://ai-daaas-api.loca.lt';
+console.log("DEBUG: BASE_URL is", BASE_URL);
 
 // Localtunnel requires this header to bypass its landing page for API requests
 const headers = {
@@ -37,8 +38,44 @@ export const getAutoCharts = async () => {
     return request(`${BASE_URL}/auto_charts`);
 };
 
-export const exportReport = () => {
-    window.open(`${BASE_URL}/export_report`, '_blank');
+export const exportReport = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/export_report`, {
+            method: 'GET',
+            headers: {
+                'Bypass-Tunnel-Reminder': 'true',
+            },
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Failed to generate report');
+        }
+        
+        const blob = await response.blob();
+        if (blob.type !== 'application/pdf') {
+            const text = await blob.text();
+            try {
+                const json = JSON.parse(text);
+                throw new Error(json.detail || 'Report is not a valid PDF');
+            } catch (e) {
+                throw new Error('Server returned an invalid file format');
+            }
+        }
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "Analysis_Report.pdf";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        return { success: true };
+    } catch (error) {
+        console.error('Export error:', error);
+        throw error;
+    }
 };
 
 export const exportCsv = () => {
@@ -50,6 +87,7 @@ export const getDriveStatus = async () => {
 };
 
 export const authDrive = async () => {
+    console.log("DEBUG: Calling authDrive at", `${BASE_URL}/drive/auth`);
     return request(`${BASE_URL}/drive/auth`, { method: 'POST' });
 };
 

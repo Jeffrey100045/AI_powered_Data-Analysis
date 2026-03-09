@@ -23,10 +23,19 @@ export default function App() {
     const [user, setUser] = useState(null)
     const [authLoading, setAuthLoading] = useState(true)
 
+    const handleExport = async () => {
+        try {
+            await exportReport();
+        } catch (err) {
+            alert("Report Export Error: " + err.message);
+        }
+    }
+
     // Cloud state
     const [isDriveAuth, setIsDriveAuth] = useState(false)
     const [driveFiles, setDriveFiles] = useState([])
     const [cloudLoading, setCloudLoading] = useState(false)
+    const [cloudError, setCloudError] = useState(null)
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (u) => {
@@ -76,25 +85,37 @@ export default function App() {
     }
 
     const handleDriveAuth = async () => {
+        console.log("DEBUG: handleDriveAuth triggered");
         try {
             const res = await authDrive()
+            console.log("DEBUG: authDrive response:", res);
             if (res.success) {
                 showToast('Authentication initiated. Check server console.', 'info')
-                // Direct polling or wait for user to refresh could be needed depending on flow
                 setTimeout(checkDriveStatus, 5000)
             } else {
                 showToast(`Auth failed: ${res.error || 'Unknown error'}`, 'error')
             }
-        } catch (e) { showToast('Auth request failed', 'error') }
+        } catch (e) { 
+            console.error("DEBUG: handleDriveAuth error:", e);
+            showToast('Auth request failed', 'error');
+        }
     }
 
     const fetchDriveFiles = async () => {
         setCloudLoading(true)
+        setCloudError(null)
         try {
             const res = await getDriveFiles()
-            if (res.success) setDriveFiles(res.files || [])
-            else showToast('Could not list drive files', 'error')
-        } catch (e) { showToast('Drive request failed', 'error') }
+            if (res.success) {
+                setDriveFiles(res.files || [])
+            } else {
+                setCloudError(res.error || 'Could not list drive files')
+                showToast('Drive list failed', 'error')
+            }
+        } catch (e) { 
+            setCloudError('Drive request failed. Please check your connection or re-authenticate.')
+            showToast('Drive request failed', 'error') 
+        }
         setCloudLoading(false)
     }
 
@@ -219,7 +240,18 @@ export default function App() {
                                 <div className="cloud-file-list">
                                     <h3 className="section-title">☁️ Your Drive Files</h3>
                                     {cloudLoading ? <div className="spinner" /> : (
-                                        driveFiles.length > 0 ? driveFiles.map(file => (
+                                        cloudError ? (
+                                            <div className="auth-error" style={{ fontSize: '0.8rem', padding: '1rem' }}>
+                                                ⚠️ {cloudError}
+                                                <button 
+                                                    className="link-btn" 
+                                                    style={{ display: 'block', marginTop: '0.5rem' }}
+                                                    onClick={fetchDriveFiles}
+                                                >
+                                                    Retry
+                                                </button>
+                                            </div>
+                                        ) : driveFiles.length > 0 ? driveFiles.map(file => (
                                             <div key={file.id} className="cloud-file-item" onClick={() => handleDownloadFromDrive(file)}>
                                                 <div className="cloud-file-info">
                                                     <span className="cloud-file-name">{file.name}</span>
@@ -274,7 +306,7 @@ export default function App() {
                         <div style={{ textAlign: 'center', padding: '2rem' }}>
                             <h3 className="section-title">📄 Evaluation Report</h3>
                             <p style={{ marginBottom: '1.5rem', color: 'var(--text-muted)' }}>Generate a comprehensive PDF report containing statistics, ML results, and insights.</p>
-                            <button className="btn btn-primary btn-full" style={{ maxWidth: '300px' }} onClick={exportReport} disabled={!data}>
+                            <button className="btn btn-primary btn-full" style={{ maxWidth: '300px' }} onClick={handleExport} disabled={!data}>
                                 📥 Download PDF Summary
                             </button>
                         </div>

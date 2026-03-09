@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
-    signInWithPopup,
-    GoogleAuthProvider,
     sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -32,19 +30,6 @@ export default function Login() {
         setLoading(false);
     };
 
-    const handleGoogleSignIn = async () => {
-        const provider = new GoogleAuthProvider();
-        setError(null);
-        try {
-            console.log("DEBUG: Initiating Google Sign-In...");
-            const result = await signInWithPopup(auth, provider);
-            console.log("DEBUG: Sign-In Success:", result.user.email);
-        } catch (err) {
-            console.error("DEBUG: Google Sign-In Error Object:", err);
-            console.error("DEBUG: Google Sign-In Error Code:", err.code);
-            setError(`Google Sign-In failed: ${err.code || err.message}`);
-        }
-    };
 
     const handleForgotPassword = async () => {
         if (!email) {
@@ -109,12 +94,6 @@ export default function Login() {
                     </button>
                 </form>
 
-                <div className="divider"><span>OR</span></div>
-
-                <button className="btn btn-secondary btn-full" onClick={handleGoogleSignIn}>
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" />
-                    Continue with Google
-                </button>
 
                 <div className="login-footer">
                     {isLogin ? "Don't have an account?" : "Already have an account?"}{' '}
@@ -209,23 +188,6 @@ export default function Login() {
                 }
                 .small-text {
                     font-size: 0.75rem;
-                }
-                .divider {
-                    display: flex;
-                    align-items: center;
-                    text-align: center;
-                    margin: 1.5rem 0;
-                    color: var(--text-muted);
-                }
-                .divider::before, .divider::after {
-                    content: '';
-                    flex: 1;
-                    border-bottom: 1px solid var(--border);
-                }
-                .divider span {
-                    margin: 0 10px;
-                    font-size: 0.7rem;
-                    font-weight: 700;
                 }
                 .login-footer {
                     margin-top: 2rem;

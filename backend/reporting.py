@@ -18,11 +18,15 @@ def format_to_reportlab_xml(text):
         text = text.replace("&lt;i&gt;", "<i>").replace("&lt;/i&gt;", "</i>")
         text = text.replace("&lt;br/&gt;", "<br/>").replace("\n", "<br/>")
         
+        # Handle some common high-unicode characters that might crash ReportLab
+        text = text.encode("ascii", "xmlcharrefreplace").decode("ascii")
+
         # Highlight key sections
         text = text.replace("📊 Model Performance", "<b>📊 Model Performance</b>")
         text = text.replace("💡 What this means for you:", "<b>💡 What this means for you:</b>")
         return text
-    except:
+    except Exception as e:
+        print(f"DEBUG: Formatting error: {e}")
         return "Error formatting analysis text."
 
 
@@ -40,9 +44,11 @@ def create_pdf_report(path, stats_df, ml_text, charts_data=None, ml_results=None
         story.append(Paragraph("1. Statistical Overview", styles["Heading2"]))
         
         if stats_df is not None and not stats_df.empty:
+            # Ensure index is part of the table for context (mean, std, etc)
+            stats_display = stats_df.reset_index()
             # Convert all values to string and round numbers for compactness
-            table_data = [stats_df.columns.tolist()]
-            for row in stats_df.values.tolist():
+            table_data = [stats_display.columns.tolist()]
+            for row in stats_display.values.tolist():
                 formatted_row = []
                 for item in row:
                     if isinstance(item, (int, float)):
@@ -58,8 +64,8 @@ def create_pdf_report(path, stats_df, ml_text, charts_data=None, ml_results=None
                 ("ALIGN", (0,0), (-1,-1), "CENTER"),
                 ("FONTNAME", (0,0), (-1,0), "Helvetica-Bold"),
                 ("FONTSIZE", (0,0), (-1,-1), 6),
-                ("BOTTOMPADDING", (0,0), (-1,-1), 1),
-                ("TOPPADDING", (0,0), (-1,-1), 1),
+                ("BOTTOMPADDING", (0,0), (-1,-1), 2),
+                ("TOPPADDING", (0,0), (-1,-1), 2),
             ]))
             story.append(table)
         else:
@@ -105,46 +111,27 @@ def create_pdf_report(path, stats_df, ml_text, charts_data=None, ml_results=None
                         elif chart["type"] == "Heatmap":
                             # Render correlation heatmap
                             try:
+                                import numpy as np
                                 cols = chart.get("columns", [])
-                                data_points = chart.get("data", [])
-                                if cols and data_points:
-                                    import numpy as np
-                                    size = len(cols)
-                                    matrix = np.zeros((size, size))
+                                points = chart.get("data", [])
+                                if cols and points:
+                                    matrix = np.zeros((len(cols), len(cols)))
                                     col_to_idx = {col: i for i, col in enumerate(cols)}
-                                    for p in data_points:
+                                    for p in points:
                                         if p["x"] in col_to_idx and p["y"] in col_to_idx:
                                             matrix[col_to_idx[p["x"]], col_to_idx[p["y"]]] = p["value"]
                                     
-                                    plt.imshow(matrix, cmap='RdYlGn', interpolation='nearest', vmin=-1, vmax=1)
-                                    plt.colorbar()
-                                    plt.xticks(range(size), cols, rotation=90, fontsize=6)
-                                    plt.yticks(range(size), cols, fontsize=6)
+                                    im = plt.imshow(matrix, cmap='RdBu', vmin=-1, vmax=1)
+                                    plt.colorbar(im)
+                                    plt.xticks(range(len(cols)), cols, rotation=90, fontsize=6)
+                                    plt.yticks(range(len(cols)), cols, fontsize=6)
+                                    # Add text values to heatmap
+                                    for i in range(len(cols)):
+                                        for j in range(len(cols)):
+                                            plt.text(j, i, f"{matrix[i, j]:.2f}", ha="center", va="center", color="black", fontsize=5)
                                     plt.title("Correlation Heatmap", fontsize=10)
-                                    plt.tight_layout()
-                            except:
-                                pass
-
-                            import numpy as np
-                            import pandas as pd
-                            cols = chart.get("columns", [])
-                            if cols:
-                                # Reconstruct matrix from flat data
-                                matrix = np.zeros((len(cols), len(cols)))
-                                for item in chart["data"]:
-                                    try:
-                                        i = cols.index(item["x"])
-                                        j = cols.index(item["y"])
-                                        matrix[i, j] = item["value"]
-                                    except: continue
-                                
-                                im = plt.imshow(matrix, cmap='RdBu', vmin=-1, vmax=1)
-                                plt.colorbar(im)
-                                plt.xticks(range(len(cols)), cols, rotation=90, fontsize=6)
-                                plt.yticks(range(len(cols)), cols, fontsize=6)
-                                for i in range(len(cols)):
-                                    for j in range(len(cols)):
-                                        plt.text(j, i, f"{matrix[i, j]:.2f}", ha="center", va="center", color="black", fontsize=5)
+                            except Exception as e:
+                                print(f"DEBUG: Heatmap error: {e}")
                         
                         plt.title(f"{chart.get('type', 'Chart')} for {chart.get('x', 'Data')}", fontsize=10)
                         plt.tight_layout(pad=1.0)
