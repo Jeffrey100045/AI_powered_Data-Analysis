@@ -124,6 +124,27 @@ class GoogleDriveService:
     
     def is_authenticated(self):
         """Check if user is authenticated."""
+        # Check current memory state first
+        if self.creds and self.creds.valid:
+            return True
+            
+        # Check environment variable (Critical for Render)
+        env_token_b64 = os.environ.get('GOOGLE_TOKEN_PICKLE_BASE64')
+        if env_token_b64:
+            try:
+                import base64
+                env_token_b64 = env_token_b64.strip().replace('\n', '').replace('\r', '').replace(' ', '')
+                missing_padding = len(env_token_b64) % 4
+                if missing_padding:
+                    env_token_b64 += '=' * (4 - missing_padding)
+                token_data = base64.b64decode(env_token_b64)
+                creds = pickle.loads(token_data)
+                if creds and creds.valid:
+                    return True
+            except:
+                pass
+
+        # Check local file fallback
         if os.path.exists(self.token_path):
             try:
                 with open(self.token_path, 'rb') as token:

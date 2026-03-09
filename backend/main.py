@@ -517,7 +517,23 @@ async def drive_status():
 @app.post("/drive/auth")
 async def drive_auth():
     try:
-        # Run OAuth flow in background thread so it doesn't block the server
+        # Check if already authenticated via env or file
+        if drive_service.is_authenticated():
+            try:
+                drive_service.authenticate() # Just to build the service object
+                return {"success": True, "message": "Already authenticated. Your Drive files are ready."}
+            except:
+                pass
+
+        # If we have an ENV token, try to initialize it immediately
+        if os.environ.get('GOOGLE_TOKEN_PICKLE_BASE64'):
+            try:
+                drive_service.authenticate()
+                return {"success": True, "message": "Authentication completed using environment variable."}
+            except Exception as e:
+                print(f"DEBUG: Env auth failed during endpoint: {e}")
+
+        # Fallback: Run OAuth flow in background thread
         def run_auth():
             try:
                 drive_service.authenticate()
@@ -527,7 +543,7 @@ async def drive_auth():
         
         auth_thread = threading.Thread(target=run_auth, daemon=True)
         auth_thread.start()
-        return {"success": True, "message": "Authentication started. A browser window should open - please complete the sign-in there."}
+        return {"success": True, "message": "Authentication initiated. A browser window should open on the server host."}
     except Exception as e:
         return {"success": False, "error": str(e)}
 
