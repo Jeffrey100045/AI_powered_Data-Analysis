@@ -23,11 +23,11 @@ function ChartRenderer({ chart }) {
 
     if (type === 'Histogram' || type === 'Bar') {
         return (
-            <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={data} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
+            <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={data} margin={{ top: 5, right: 10, left: 5, bottom: 25 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#1f2d45" />
-                    <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} />
-                    <YAxis tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} axisLine={false} />
+                    <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} label={{ value: chart.x || '', position: 'insideBottom', offset: -15, fill: '#94a3b8', fontSize: 12 }} />
+                    <YAxis tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} axisLine={false} label={{ value: 'Frequency', angle: -90, position: 'insideLeft', offset: 10, fill: '#94a3b8', fontSize: 12 }} />
                     <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#fff' }} labelStyle={{ color: '#fff' }} />
                     <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]}>
                         {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
@@ -41,11 +41,11 @@ function ChartRenderer({ chart }) {
         const xKey = chart.x
         const yKey = chart.y
         return (
-            <ResponsiveContainer width="100%" height={220}>
-                <ScatterChart margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
+            <ResponsiveContainer width="100%" height={250}>
+                <ScatterChart margin={{ top: 5, right: 10, left: 5, bottom: 25 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#1f2d45" />
-                    <XAxis dataKey={xKey} name={xKey} tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} />
-                    <YAxis dataKey={yKey} name={yKey} tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} axisLine={false} />
+                    <XAxis dataKey={xKey} name={xKey} tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} label={{ value: xKey, position: 'insideBottom', offset: -15, fill: '#94a3b8', fontSize: 12 }} />
+                    <YAxis dataKey={yKey} name={yKey} tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} axisLine={false} label={{ value: yKey, angle: -90, position: 'insideLeft', offset: 10, fill: '#94a3b8', fontSize: 12 }} />
                     <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#fff' }} labelStyle={{ color: '#fff' }} cursor={{ fill: 'rgba(59,130,246,0.1)' }} />
                     <Scatter data={data} fill="#8b5cf6" />
                 </ScatterChart>
@@ -57,11 +57,11 @@ function ChartRenderer({ chart }) {
         const xKey = chart.x
         const yKey = chart.y
         return (
-            <ResponsiveContainer width="100%" height={220}>
-                <LineChart data={data} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
+            <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={data} margin={{ top: 5, right: 10, left: 5, bottom: 25 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#1f2d45" />
-                    <XAxis dataKey={xKey} tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} />
-                    <YAxis tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} axisLine={false} />
+                    <XAxis dataKey={xKey} tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} label={{ value: xKey, position: 'insideBottom', offset: -15, fill: '#94a3b8', fontSize: 12 }} />
+                    <YAxis tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} axisLine={false} label={{ value: yKey, angle: -90, position: 'insideLeft', offset: 10, fill: '#94a3b8', fontSize: 12 }} />
                     <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: '#fff' }} labelStyle={{ color: '#fff' }} />
                     <Line type="monotone" dataKey={yKey} stroke="#10b981" strokeWidth={2} dot={false} />
                 </LineChart>
@@ -183,11 +183,11 @@ function MLSection({ mlResults, mlLoading }) {
                         <span className="card-title">📈 Actual vs Predicted</span>
                     </div>
                     {plot_data?.length > 0 ? (
-                        <ResponsiveContainer width="100%" height={200}>
-                            <ScatterChart margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
+                        <ResponsiveContainer width="100%" height={230}>
+                            <ScatterChart margin={{ top: 5, right: 10, left: 5, bottom: 25 }}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2d45" />
-                                <XAxis dataKey="actual" name="Actual" tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} />
-                                <YAxis dataKey="predicted" name="Predicted" tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} axisLine={false} />
+                                <XAxis dataKey="actual" name="Actual" tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} label={{ value: 'Actual', position: 'insideBottom', offset: -15, fill: '#94a3b8', fontSize: 12 }} />
+                                <YAxis dataKey="predicted" name="Predicted" tick={{ fill: '#94a3b8', fontSize: 10 }} tickLine={false} axisLine={false} label={{ value: 'Predicted', angle: -90, position: 'insideLeft', offset: 10, fill: '#94a3b8', fontSize: 12 }} />
                                 <Tooltip contentStyle={{ backgroundColor: '#111827', border: '1px solid #1f2d45', borderRadius: '8px', color: '#f1f5f9', fontSize: '0.78rem' }} itemStyle={{ color: '#fff' }} labelStyle={{ color: '#fff' }} />
                                 <Scatter data={plot_data} fill="#10b981" />
                             </ScatterChart>
