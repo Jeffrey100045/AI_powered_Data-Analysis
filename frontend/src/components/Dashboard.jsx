@@ -156,7 +156,7 @@ function MLSection({ mlResults, mlLoading }) {
         <div>
             <div className="section-title">🧠 Machine Learning — {task} for <em style={{ color: 'var(--accent)' }}>{target}</em></div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+            <div className="ml-results-grid">
                 {/* Model Comparison */}
                 <div className="card">
                     <div className="card-header">
